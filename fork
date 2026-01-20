@@ -1,0 +1,14 @@
+msa-invitation/
+├── public/
+│   ├── index.html
+│   ├── invitation.html
+│   └── assets/
+├── admin/
+│   ├── login.html
+│   └── dashboard.html
+├── reseller/
+│   ├── login.html
+│   └── dashboard.html
+├── firebase/
+│   └── firebase-config.js
+└── README.md
