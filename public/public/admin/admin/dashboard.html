@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | MSA Invitation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f5f5}
+    header{
+      background:#f1a7c5;
+      padding:20px;
+      color:#fff;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .container{padding:30px}
+    .card{
+      background:#fff;
+      padding:25px;
+      border-radius:16px;
+      margin-bottom:20px;
+      box-shadow:0 8px 20px rgba(0,0,0,.08);
+    }
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:10px;
+      border-radius:8px;
+      border:1px solid #ccc;
+    }
+    button{
+      padding:12px 26px;
+      background:#f1a7c5;
+      border:none;
+      color:#fff;
+      border-radius:20px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+    th,td{
+      padding:10px;
+      border-bottom:1px solid #eee;
+      text-align:left;
+    }
+    a{color:#f08bb4;text-decoration:none}
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Admin Dashboard</h2>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+  <!-- TAMBAH UNDANGAN -->
+  <div class="card">
+    <h3>Tambah Undangan</h3>
+    <input id="nama" placeholder="Nama Mempelai (contoh: Budi & Ani)">
+    <input id="slug" placeholder="Slug URL (contoh: budi-ani)">
+    <button onclick="tambah()">Generate Link</button>
+    <p id="hasil"></p>
+  </div>
+
+  <!-- DAFTAR UNDANGAN -->
+  <div class="card">
+    <h3>Daftar Undangan</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody id="list"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  // CEK LOGIN
+  if(localStorage.getItem('adminLogin') !== 'true'){
+    window.location.href = 'login.html';
+  }
+
+  let data = JSON.parse(localStorage.getItem('undangan')) || [];
+
+  function render(){
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    data.forEach(u=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${u.nama}</td>
+        <td>
+          <a href="../public/invitation.html?to=Tamu" target="_blank">
+            ${location.origin}/invitation.html?to=Tamu
+          </a>
+        </td>
+      `;
+      list.appendChild(tr);
+    });
+  }
+
+  function tambah(){
+    const nama = document.getElementById('nama').value;
+    const slug = document.getElementById('slug').value;
+    if(!nama || !slug){
+      alert('Lengkapi data');
+      return;
+    }
+    data.push({nama, slug});
+    localStorage.setItem('undangan', JSON.stringify(data));
+    document.getElementById('hasil').innerText =
+      'Link berhasil dibuat: ' + location.origin + '/invitation.html?to=Tamu';
+    render();
+  }
+
+  function logout(){
+    localStorage.removeItem('adminLogin');
+    window.location.href = 'login.html';
+  }
+
+  render();
+</script>
+
+</body>
+</html>
